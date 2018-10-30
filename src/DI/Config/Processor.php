@@ -375,9 +375,15 @@ class Processor
 	{
 		if (is_int($name)) {
 			$factory = $config['factory'] ?? null;
-			$postfix = $factory instanceof Statement && is_string($factory->getEntity()) ? '.' . $factory->getEntity(
-				) : (is_scalar($factory) ? ".$factory" : '');
-			$name = (count($this->builder->getDefinitions()) + 1) . preg_replace('#\W+#', '_', $postfix);
+			$postfix = $factory instanceof Statement && is_string($factory->getEntity())
+				? $factory->getEntity()
+				: (is_scalar($factory) ? $factory : '');
+			$postfix = preg_replace('#\W+#', '_', $postfix);
+			$counter = $postfix ? null : 1;
+			do {
+				$name = $postfix . ($postfix && $counter ? '_' : '') . $counter;
+				$counter++;
+			} while ($this->builder->hasDefinition($name));
 		} elseif (preg_match('#^@[\w\\\\]+\z#', $name)) {
 			$name = $this->builder->getByType(substr($name, 1), true);
 		}

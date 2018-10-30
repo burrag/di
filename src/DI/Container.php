@@ -272,7 +272,8 @@ class Container
 
 	public static function getMethodName(string $name): string
 	{
-		$uname = ucfirst($name);
-		return 'createService' . ($name === $uname ? '__' : '') . str_replace('.', '__', $uname);
+		return 'createService'
+			. (preg_match('#^[A-Z][^_]+$#', $name) ? '__' : '')
+			. str_replace('.', '__', ucfirst($name));
 	}
 }
