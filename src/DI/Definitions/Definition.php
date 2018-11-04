@@ -139,6 +139,21 @@ abstract class Definition
 	}
 
 
+	/**
+	 * @return static
+	 */
+	public function setPublic(bool $state = true)
+	{
+		return $this->addTag('nette.public', $state);
+	}
+
+
+	public function isPublic(): bool
+	{
+		return (bool) $this->getTag('nette.public');
+	}
+
+
 	public function __clone()
 	{
 		$this->notifier = $this->name = null;
